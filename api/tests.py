@@ -57,7 +57,22 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
 
-    def test_food_update_endpoint(self):
+    def test_food_update_endpoint_put(self):
+        old_food = Food.objects.get(id=1)
+        self.assertEqual(old_food.name, self.name)
+        self.assertEqual(old_food.calories, self.calories)
+
+        new_name, new_calories = 'Ramen', 650
+        response = self.client.put('/api/v1/foods/1', {'name': new_name, 'calories': new_calories}, format='json')
+        self.assertEqual(response.json()['id'], 1)
+        self.assertEqual(response.json()['name'], 'Ramen')
+        self.assertEqual(response.json()['calories'], 650)
+
+        updated_food = Food.objects.get(id=1)
+        self.assertEqual(updated_food.name, new_name)
+        self.assertEqual(updated_food.calories, new_calories)
+
+    def test_food_update_endpoint_patch(self):
         old_food = Food.objects.get(id=1)
         self.assertEqual(old_food.name, self.name)
         self.assertEqual(old_food.calories, self.calories)

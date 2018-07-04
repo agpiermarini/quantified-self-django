@@ -86,3 +86,12 @@ class FoodEndpointsTestCase(TestCase):
         updated_food = Food.objects.get(id=1)
         self.assertEqual(updated_food.name, new_name)
         self.assertEqual(updated_food.calories, new_calories)
+
+    def test_food_delete_endpoint(self):
+        self.assertEqual(len(Food.objects.all()), 2)
+
+        response = self.client.delete('/api/v1/foods/1')
+        print(Food.objects.filter(id=1))
+        self.assertEqual(len(Food.objects.all()), 1)
+        self.assertEqual(response.status_code, 204)
+        self.assertTrue(status.is_success(response.status_code))

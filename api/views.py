@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework import status
 from .serializers import FoodSerializer
 from .models import Food
 
@@ -30,3 +31,7 @@ class FoodsView(viewsets.ViewSet):
         queryset = Food.objects.get(id=food_id)
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
+
+    def destroy(self, request, food_id):
+        Food.objects.filter(id=food_id).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -4,14 +4,13 @@ from __future__ import unicode_literals
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
-# from django.core.urlresolvers import reverse
 from .models import Food
+from .models import Meal
+# from django.core.urlresolvers import reverse
 
 class FoodModelTestCase(TestCase):
-    """Food model tests"""
 
     def setUp(self):
-        """Define the test client and other test variables"""
         self.name = "Orange"
         self.calories = 50
         self.food = Food(name=self.name, calories=self.calories)
@@ -53,7 +52,7 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(response.json()['calories'], self.calories2)
 
     def test_food_create_endpoint(self):
-        response = self.client.post('/api/v1/foods', {'name': 'Ramen', 'calories': 650})
+        response = self.client.post('/api/v1/foods', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
 
@@ -63,7 +62,7 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(old_food.calories, self.calories)
 
         new_name, new_calories = 'Ramen', 650
-        response = self.client.put('/api/v1/foods/1', {'name': new_name, 'calories': new_calories}, format='json')
+        response = self.client.put('/api/v1/foods/1', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
         self.assertEqual(response.json()['id'], 1)
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
@@ -78,7 +77,7 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(old_food.calories, self.calories)
 
         new_name, new_calories = 'Ramen', 650
-        response = self.client.patch('/api/v1/foods/1', {'name': new_name, 'calories': new_calories}, format='json')
+        response = self.client.patch('/api/v1/foods/1', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
         self.assertEqual(response.json()['id'], 1)
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
@@ -91,7 +90,40 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(len(Food.objects.all()), 2)
 
         response = self.client.delete('/api/v1/foods/1')
-        print(Food.objects.filter(id=1))
         self.assertEqual(len(Food.objects.all()), 1)
         self.assertEqual(response.status_code, 204)
         self.assertTrue(status.is_success(response.status_code))
+
+
+
+class MealModelTestCase(TestCase):
+        def setUp(self):
+            self.meal_name = "Breakfast"
+            self.meal = Meal(name=self.meal_name)
+
+        def test_model_can_create_a_meal(self):
+            old_count = Meal.objects.count()
+            self.meal.save()
+            new_count = Meal.objects.count()
+            new_meal  = Meal.objects.first()
+
+            self.assertNotEqual(old_count, new_count)
+            self.assertEqual(new_meal.name, self.meal_name)
+
+
+# class MealEndpointsTestCase(TestCase):
+#
+#     def setUp(self):
+#         self.client = APIClient()
+#         self.food_name = "Orange"
+#         self.calories = 50
+#         self.food_name2 = "Shumai"
+#         self.calories2 = 350
+#         self.meal_name = "Breakfast"
+#
+#         self.food = Food(name=self.food_name, calories=self.calories).save()
+#         self.food2 = Food(name=self.food_name2, calories=self.calories2).save()
+#
+#         self.meal = Meal(name=self.meal_name).save()
+#
+#         def test_a_meal_can_be_created(self):

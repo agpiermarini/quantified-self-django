@@ -8,7 +8,6 @@ from rest_framework import status
 from .serializers import FoodSerializer
 from .models import Food
 
-# Create your views here.
 class FoodsView(viewsets.ViewSet):
 
     def index(self, request):
@@ -22,12 +21,12 @@ class FoodsView(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        queryset = Food.objects.create(name = request.data['name'], calories=request.data['calories'])
+        queryset = Food.objects.create(name = request.data['food']['name'], calories=request.data['food']['calories'])
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
 
     def update(self, request, food_id):
-        Food.objects.filter(id=food_id).update(name = request.data['name'], calories=request.data['calories'])
+        Food.objects.filter(id=food_id).update(name = request.data['food']['name'], calories=request.data['food']['calories'])
         queryset = Food.objects.get(id=food_id)
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)

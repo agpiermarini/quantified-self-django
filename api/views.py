@@ -5,8 +5,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import FoodSerializer
-from .models import Food
+from .serializers import FoodSerializer, MealSerializer
+from .models import Food, Meal
 
 class FoodsView(viewsets.ViewSet):
 
@@ -34,3 +34,10 @@ class FoodsView(viewsets.ViewSet):
     def destroy(self, request, food_id):
         Food.objects.filter(id=food_id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class MealsView(viewsets.ViewSet):
+
+    def index(self, request):
+        queryset   = Meal.objects.all()
+        serializer = MealSerializer(queryset, many=True)
+        return Response(serializer.data)

@@ -108,14 +108,14 @@ class MealModelTestCase(TestCase):
         self.assertNotEqual(old_count, new_count)
         self.assertEqual(new_meal.name, self.meal_name)
 
-    def test_can_establish_meal_food_connection(self):
+    def test_meal_food_association(self):
         self.meal.save()
         new_meal = Meal.objects.get(id=1)
         self.assertEqual(len(new_meal.foods.all()), 0)
 
         new_food = Food.objects.get(id=1)
-        new_meal.foods.add()
-        self.assertEqual(len(new_meal.foods.all()), 0)
+        new_meal.foods.add(new_food)
+        self.assertEqual(len(new_meal.foods.all()), 1)
 
 class MealEndpointsTestCase(TestCase):
 
@@ -133,7 +133,22 @@ class MealEndpointsTestCase(TestCase):
         self.meal_name = "Breakfast"
         self.meal = Meal(name=self.meal_name).save()
 
+        self.meal_name2 = "Lunch"
+        self.meal2 = Meal(name=self.meal_name2).save()
+
+
     def test_meal_index_endpoint(self):
         response = self.client.get('/api/v1/meals')
-        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(len(response.json()), 2)
         self.assertEqual(response.json()[0]['name'], self.meal_name)
+        self.assertEqual(response.json()[0]['foods'], [])
+        self.assertEqual(len(response.json()[0]['foods']), 0)
+
+        self.assertEqual(response.json()[1]['name'], self.meal_name2)
+        self.assertEqual(response.json()[1]['foods'], [])
+        self.assertEqual(len(response.json()[1]['foods']), 0)
+
+    def test_meal_show_endpoint(self):
+        response = self.client.get('/api/v1/meals/1/foods')
+        self.assertEqual(response.json()['name'], self.meal_name)
+        self.assertEqual(len(response.json()['foods']), 0)

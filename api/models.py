@@ -14,7 +14,7 @@ class Food(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('id',)
 
 class Meal(models.Model):
     name       = models.CharField(max_length=100, blank=False)

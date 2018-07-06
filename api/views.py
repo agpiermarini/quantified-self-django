@@ -22,6 +22,7 @@ class FoodsView(viewsets.ViewSet):
 
     def create(self, request):
         queryset = Food.objects.create(name = request.data['food']['name'], calories=request.data['food']['calories'])
+        print(queryset)
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
 
@@ -40,4 +41,9 @@ class MealsView(viewsets.ViewSet):
     def index(self, request):
         queryset   = Meal.objects.all()
         serializer = MealSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def show(self, request, meal_id=None):
+        queryset = Meal.objects.get(id=meal_id)
+        serializer = MealSerializer(queryset, many=False)
         return Response(serializer.data)

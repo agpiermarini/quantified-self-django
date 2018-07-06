@@ -117,6 +117,10 @@ class MealModelTestCase(TestCase):
         new_meal.foods.add(new_food)
         self.assertEqual(len(new_meal.foods.all()), 1)
 
+        new_meal_food = new_meal.foods.get(id=1)
+        self.assertEqual(new_meal_food.name, new_food.name)
+        self.assertEqual(new_meal_food.calories, new_food.calories)
+
 class MealEndpointsTestCase(TestCase):
 
     def setUp(self):
@@ -136,7 +140,6 @@ class MealEndpointsTestCase(TestCase):
         self.meal_name2 = "Lunch"
         self.meal2 = Meal(name=self.meal_name2).save()
 
-
     def test_meal_index_endpoint(self):
         response = self.client.get('/api/v1/meals')
         self.assertEqual(len(response.json()), 2)
@@ -149,6 +152,10 @@ class MealEndpointsTestCase(TestCase):
         self.assertEqual(len(response.json()[1]['foods']), 0)
 
     def test_meal_show_endpoint(self):
+        meal = Meal.objects.get(id=1)
+        food = Food.objects.get(id=1)
+        meal.foods.add(food)
+
         response = self.client.get('/api/v1/meals/1/foods')
         self.assertEqual(response.json()['name'], self.meal_name)
-        self.assertEqual(len(response.json()['foods']), 0)
+        self.assertEqual(len(response.json()['foods']), 1)

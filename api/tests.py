@@ -190,3 +190,8 @@ class MealFoodEndpointsTestCase(TestCase):
         response = self.client.post('/api/v1/meals/1/foods/1',{}, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json(), f'Successfully added {self.food.name} to {self.meal.name}')
+
+    def test_meal_food_delete_endpoint(self):
+        response = self.client.delete('/api/v1/meals/1/foods/1',{}, format='json')
+        self.assertEqual(response.status_code, 202)
+        self.assertEqual(response.json(), f'Successfully removed {self.food.name} from {self.meal.name}')

@@ -182,26 +182,11 @@ class MealFoodEndpointsTestCase(TestCase):
         self.meal_name2 = "Lunch"
         Meal(name=self.meal_name2).save()
 
-        meal = Meal.objects.get(id=1)
-        food = Food.objects.get(id=1)
-        meal.foods.add(food)
+        self.meal = Meal.objects.get(id=1)
+        self.food = Food.objects.get(id=1)
+        self.meal.foods.add(self.food)
 
-    # def test_meal_index_endpoint(self):
-    #     response = self.client.get('/api/v1/meals')
-    #     self.assertEqual(len(response.json()), 2)
-    #     self.assertEqual(response.json()[0]['name'], self.meal_name)
-    #     self.assertEqual(response.json()[0]['foods'], [])
-    #     self.assertEqual(len(response.json()[0]['foods']), 0)
-
-    #     self.assertEqual(response.json()[1]['name'], self.meal_name2)
-    #     self.assertEqual(response.json()[1]['foods'], [])
-    #     self.assertEqual(len(response.json()[1]['foods']), 0)
-    #
-    # def test_meal_show_endpoint(self):
-    #     meal = Meal.objects.get(id=1)
-    #     food = Food.objects.get(id=1)
-    #     meal.foods.add(food)
-    #
-    #     response = self.client.get('/api/v1/meals/1/foods')
-    #     self.assertEqual(response.json()['name'], self.meal_name)
-    #     self.assertEqual(len(response.json()['foods']), 1)
+    def test_meal_food_create_endpoint(self):
+        response = self.client.post('/api/v1/meals/1/foods/1',{}, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json(), f'Successfully added {self.food.name} to {self.meal.name}')

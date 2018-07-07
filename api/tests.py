@@ -58,6 +58,18 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
 
+    def test_food_create_endpoint_sad_no_name(self):
+        response = self.client.post('/api/v1/foods', {'food': {'calories': 650}}, format='json')
+        self.assertEqual(response.status_code, 404)
+
+    def test_food_create_endpoint_sad_no_calories(self):
+        response = self.client.post('/api/v1/foods', {'food': {'name': "Orange"}}, format='json')
+        self.assertEqual(response.status_code, 404)
+
+    def test_food_create_endpoint_sad_non_multipart(self):
+        response = self.client.post('/api/v1/foods', {'name': "Orange", "calories": 400}, format='json')
+        self.assertEqual(response.status_code, 404)
+
     def test_food_update_endpoint_put(self):
         old_food = Food.objects.get(id=1)
         self.assertEqual(old_food.name, self.name)
@@ -88,8 +100,20 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(updated_food.name, new_name)
         self.assertEqual(updated_food.calories, new_calories)
 
-    def test_food_update_endpoint_patch_sad(self):
+    def test_food_update_endpoint_patch_sad_nonexistent_record(self):
         response = self.client.patch('/api/v1/foods/5', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
+        self.assertEqual(response.status_code, 404)
+
+    def test_food_update_endpoint_patch_sad_no_name(self):
+        response = self.client.patch('/api/v1/foods/1', {'food': {'calories': 650}}, format='json')
+        self.assertEqual(response.status_code, 404)
+
+    def test_food_update_endpoint_patch_sad_no_calories(self):
+        response = self.client.post('/api/v1/foods', {'food': {'name': "Orange"}}, format='json')
+        self.assertEqual(response.status_code, 404)
+
+    def test_food_update_endpoint_patch_sad_no_multipart(self):
+        response = self.client.post('/api/v1/foods', {'name': "Orange", 'calories': 400}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_delete_endpoint(self):

@@ -21,7 +21,11 @@ class FoodsView(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        queryset = Food.objects.create(name = request.data['food']['name'], calories=request.data['food']['calories'])
+        try:
+            queryset = Food.objects.create(name = request.data['food']['name'], calories=request.data['food']['calories'])
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
 
@@ -30,7 +34,10 @@ class FoodsView(viewsets.ViewSet):
         if food.count() == 0:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
-            food.update(name = request.data['food']['name'], calories=request.data['food']['calories'])
+            try:
+                food.update(name = request.data['food']['name'], calories=request.data['food']['calories'])
+            except:
+                return Response(status=status.HTTP_404_NOT_FOUND)    
             queryset = Food.objects.get(id=food_id)
             serializer = FoodSerializer(queryset, many=False)
             return Response(serializer.data)

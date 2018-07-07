@@ -37,7 +37,7 @@ class FoodEndpointsTestCase(TestCase):
         self.food2 = Food(name=self.name2, calories=self.calories2).save()
 
     def test_food_index_endpoint(self):
-        response = self.client.get('/api/v1/foods')
+        response = self.client.get('/api/v1/foods/')
         self.assertEqual(len(response.json()), 2)
         self.assertEqual(response.json()[0]['name'], self.name)
         self.assertEqual(response.json()[0]['calories'], self.calories)
@@ -45,29 +45,29 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(response.json()[1]['calories'], self.calories2)
 
     def test_food_show_endpoint(self):
-        response = self.client.get('/api/v1/foods/2')
+        response = self.client.get('/api/v1/foods/2/')
         self.assertEqual(response.json()['name'], self.name2)
         self.assertEqual(response.json()['calories'], self.calories2)
 
     def test_food_show_endpoint_sad(self):
-        response = self.client.get('/api/v1/foods/3')
+        response = self.client.get('/api/v1/foods/3/')
         self.assertEqual(response.status_code, 404)
 
     def test_food_create_endpoint(self):
-        response = self.client.post('/api/v1/foods', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
+        response = self.client.post('/api/v1/foods/', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
 
     def test_food_create_endpoint_sad_no_name(self):
-        response = self.client.post('/api/v1/foods', {'food': {'calories': 650}}, format='json')
+        response = self.client.post('/api/v1/foods/', {'food': {'calories': 650}}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_create_endpoint_sad_no_calories(self):
-        response = self.client.post('/api/v1/foods', {'food': {'name': "Orange"}}, format='json')
+        response = self.client.post('/api/v1/foods/', {'food': {'name': "Orange"}}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_create_endpoint_sad_non_multipart(self):
-        response = self.client.post('/api/v1/foods', {'name': "Orange", "calories": 400}, format='json')
+        response = self.client.post('/api/v1/foods/', {'name': "Orange", "calories": 400}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_update_endpoint_put(self):
@@ -76,7 +76,7 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(old_food.calories, self.calories)
 
         new_name, new_calories = 'Ramen', 650
-        response = self.client.put('/api/v1/foods/1', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
+        response = self.client.put('/api/v1/foods/1/', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
         self.assertEqual(response.json()['id'], 1)
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
@@ -91,7 +91,7 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(old_food.calories, self.calories)
 
         new_name, new_calories = 'Ramen', 650
-        response = self.client.patch('/api/v1/foods/1', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
+        response = self.client.patch('/api/v1/foods/1/', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
         self.assertEqual(response.json()['id'], 1)
         self.assertEqual(response.json()['name'], 'Ramen')
         self.assertEqual(response.json()['calories'], 650)
@@ -101,31 +101,31 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(updated_food.calories, new_calories)
 
     def test_food_update_endpoint_patch_sad_nonexistent_record(self):
-        response = self.client.patch('/api/v1/foods/5', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
+        response = self.client.patch('/api/v1/foods/5/', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_update_endpoint_patch_sad_no_name(self):
-        response = self.client.patch('/api/v1/foods/1', {'food': {'calories': 650}}, format='json')
+        response = self.client.patch('/api/v1/foods/1/', {'food': {'calories': 650}}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_update_endpoint_patch_sad_no_calories(self):
-        response = self.client.post('/api/v1/foods', {'food': {'name': "Orange"}}, format='json')
+        response = self.client.post('/api/v1/foods/', {'food': {'name': "Orange"}}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_update_endpoint_patch_sad_no_multipart(self):
-        response = self.client.post('/api/v1/foods', {'name': "Orange", 'calories': 400}, format='json')
+        response = self.client.post('/api/v1/foods/', {'name': "Orange", 'calories': 400}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_food_delete_endpoint(self):
         self.assertEqual(len(Food.objects.all()), 2)
 
-        response = self.client.delete('/api/v1/foods/1')
+        response = self.client.delete('/api/v1/foods/1/')
         self.assertEqual(len(Food.objects.all()), 1)
         self.assertEqual(response.status_code, 204)
         self.assertTrue(status.is_success(response.status_code))
 
     def test_food_delete_endpoint_sad(self):
-        response = self.client.delete('/api/v1/foods/5')
+        response = self.client.delete('/api/v1/foods/5/')
         self.assertEqual(response.status_code, 404)
 
 class MealModelTestCase(TestCase):
@@ -177,7 +177,7 @@ class MealEndpointsTestCase(TestCase):
         Meal(name=self.meal_name2).save()
 
     def test_meal_index_endpoint(self):
-        response = self.client.get('/api/v1/meals')
+        response = self.client.get('/api/v1/meals/')
         self.assertEqual(len(response.json()), 2)
         self.assertEqual(response.json()[0]['name'], self.meal_name)
         self.assertEqual(response.json()[0]['foods'], [])
@@ -192,7 +192,7 @@ class MealEndpointsTestCase(TestCase):
         food = Food.objects.get(id=1)
         meal.foods.add(food)
 
-        response = self.client.get('/api/v1/meals/1/foods')
+        response = self.client.get('/api/v1/meals/1/foods/')
         meal_food = response.json()['foods']
         self.assertEqual(response.json()['name'], self.meal_name)
         self.assertEqual(meal_food[0]['id'], food.id)
@@ -200,7 +200,7 @@ class MealEndpointsTestCase(TestCase):
         self.assertEqual(meal_food[0]['calories'], food.calories)
 
     def test_meal_show_endpoint_sad(self):
-        response = self.client.get('/api/v1/meals/3/foods')
+        response = self.client.get('/api/v1/meals/3/foods/')
         self.assertEqual(response.status_code, 404)
 
 class MealFoodEndpointsTestCase(TestCase):
@@ -227,29 +227,29 @@ class MealFoodEndpointsTestCase(TestCase):
         self.meal.foods.add(self.food)
 
     def test_meal_food_create_endpoint(self):
-        response = self.client.post('/api/v1/meals/1/foods/1',{}, format='json')
+        response = self.client.post('/api/v1/meals/1/foods/1/',{}, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json(), f'Successfully added {self.food.name} to {self.meal.name}')
 
     def test_meal_food_create_endpoint_sad_nonexistent_meal(self):
-        response = self.client.post('/api/v1/meals/3/foods/1',{}, format='json')
+        response = self.client.post('/api/v1/meals/3/foods/1/',{}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_meal_food_create_endpoint_sad_nonexistent_food(self):
-        response = self.client.post('/api/v1/meals/1/foods/4',{}, format='json')
+        response = self.client.post('/api/v1/meals/1/foods/4/',{}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_meal_food_delete_endpoint(self):
-        response = self.client.delete('/api/v1/meals/1/foods/1',{}, format='json')
+        response = self.client.delete('/api/v1/meals/1/foods/1/',{}, format='json')
         self.assertEqual(response.status_code, 202)
         self.assertEqual(response.json(), f'Successfully removed {self.food.name} from {self.meal.name}')
 
     def test_meal_food_delete_endpoint_sad_nonexistent_meal(self):
-        response = self.client.post('/api/v1/meals/3/foods/1',{}, format='json')
+        response = self.client.post('/api/v1/meals/3/foods/1/',{}, format='json')
         self.assertEqual(response.status_code, 404)
 
     def test_meal_food_delete_endpoint_sad_nonexistent_food(self):
-        response = self.client.post('/api/v1/meals/1/foods/4',{}, format='json')
+        response = self.client.post('/api/v1/meals/1/foods/4/',{}, format='json')
         self.assertEqual(response.status_code, 404)
 
     # def test_meal_food_delete_endpoint_sad_no_meal_food_record(self):

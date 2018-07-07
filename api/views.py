@@ -22,7 +22,6 @@ class FoodsView(viewsets.ViewSet):
 
     def create(self, request):
         queryset = Food.objects.create(name = request.data['food']['name'], calories=request.data['food']['calories'])
-        print(queryset)
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
 

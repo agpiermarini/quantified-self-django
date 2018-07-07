@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.http import Http404
 from .serializers import FoodSerializer, MealSerializer
 from .models import Food, Meal
 
@@ -37,7 +36,8 @@ class FoodsView(viewsets.ViewSet):
             try:
                 food.update(name = request.data['food']['name'], calories=request.data['food']['calories'])
             except:
-                return Response(status=status.HTTP_404_NOT_FOUND)    
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
             queryset = Food.objects.get(id=food_id)
             serializer = FoodSerializer(queryset, many=False)
             return Response(serializer.data)

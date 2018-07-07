@@ -8,6 +8,7 @@ class FoodSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'calories')
 
 class MealSerializer(serializers.ModelSerializer):
+    foods = FoodSerializer(many=True)
 
     class Meta:
         model = Meal

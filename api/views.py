@@ -31,7 +31,7 @@ class FoodsView(viewsets.ViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, food_id):
-        Food.objects.filter(id=food_id).delete()
+        get_object_or_404(Food, id=food_id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class MealsView(viewsets.ViewSet):

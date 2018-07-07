@@ -96,6 +96,10 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertTrue(status.is_success(response.status_code))
 
+    def test_food_delete_endpoint_sad(self):
+        response = self.client.delete('/api/v1/foods/5')
+        self.assertEqual(response.status_code, 404)
+
 class MealModelTestCase(TestCase):
 
     def setUp(self):

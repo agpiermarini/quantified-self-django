@@ -88,6 +88,10 @@ class FoodEndpointsTestCase(TestCase):
         self.assertEqual(updated_food.name, new_name)
         self.assertEqual(updated_food.calories, new_calories)
 
+    def test_food_update_endpoint_patch_sad(self):
+        response = self.client.patch('/api/v1/foods/5', {'food': {'name': 'Ramen', 'calories': 650}}, format='json')
+        self.assertEqual(response.status_code, 404)
+
     def test_food_delete_endpoint(self):
         self.assertEqual(len(Food.objects.all()), 2)
 

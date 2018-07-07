@@ -128,17 +128,17 @@ class MealEndpointsTestCase(TestCase):
 
         self.food_name = "Orange"
         self.calories = 50
-        self.food = Food(name=self.food_name, calories=self.calories).save()
+        Food(name=self.food_name, calories=self.calories).save()
 
         self.food_name2 = "Shumai"
         self.calories2 = 350
-        self.food2 = Food(name=self.food_name2, calories=self.calories2).save()
+        Food(name=self.food_name2, calories=self.calories2).save()
 
         self.meal_name = "Breakfast"
-        self.meal = Meal(name=self.meal_name).save()
+        Meal(name=self.meal_name).save()
 
         self.meal_name2 = "Lunch"
-        self.meal2 = Meal(name=self.meal_name2).save()
+        Meal(name=self.meal_name2).save()
 
     def test_meal_index_endpoint(self):
         response = self.client.get('/api/v1/meals')
@@ -157,5 +157,41 @@ class MealEndpointsTestCase(TestCase):
         meal.foods.add(food)
 
         response = self.client.get('/api/v1/meals/1/foods')
+        meal_food = response.json()['foods']
         self.assertEqual(response.json()['name'], self.meal_name)
-        self.assertEqual(len(response.json()['foods']), 1)
+        self.assertEqual(meal_food[0]['id'], food.id)
+        self.assertEqual(meal_food[0]['name'], food.name)
+        self.assertEqual(meal_food[0]['calories'], food.calories)
+
+class MealFoodEndpointsTestCase(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.food_name = "Orange"
+        self.calories = 50
+        Food(name=self.food_name, calories=self.calories).save()
+
+        self.food_name2 = "Shumai"
+        self.calories2 = 350
+        Food(name=self.food_name2, calories=self.calories2).save()
+
+        self.meal_name = "Breakfast"
+        Meal(name=self.meal_name).save()
+
+        self.meal_name2 = "Lunch"
+        Meal(name=self.meal_name2).save()
+
+        self.meal = Meal.objects.get(id=1)
+        self.food = Food.objects.get(id=1)
+        self.meal.foods.add(self.food)
+
+    def test_meal_food_create_endpoint(self):
+        response = self.client.post('/api/v1/meals/1/foods/1',{}, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json(), f'Successfully added {self.food.name} to {self.meal.name}')
+
+    def test_meal_food_delete_endpoint(self):
+        response = self.client.delete('/api/v1/meals/1/foods/1',{}, format='json')
+        self.assertEqual(response.status_code, 202)
+        self.assertEqual(response.json(), f'Successfully removed {self.food.name} from {self.meal.name}')

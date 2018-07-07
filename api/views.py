@@ -22,7 +22,6 @@ class FoodsView(viewsets.ViewSet):
 
     def create(self, request):
         queryset = Food.objects.create(name = request.data['food']['name'], calories=request.data['food']['calories'])
-        print(queryset)
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
 
@@ -47,3 +46,19 @@ class MealsView(viewsets.ViewSet):
         queryset = Meal.objects.get(id=meal_id)
         serializer = MealSerializer(queryset, many=False)
         return Response(serializer.data)
+
+class MealFoodsView(viewsets.ViewSet):
+
+    def create(self, request, meal_id=None, food_id=None):
+        meal = Meal.objects.get(id=meal_id)
+        food = Food.objects.get(id=food_id)
+        meal.foods.add(food)
+        message = f'Successfully added {food.name} to {meal.name}'
+        return Response(message, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, meal_id=None, food_id=None):
+        meal = Meal.objects.get(id=meal_id)
+        food = Food.objects.get(id=food_id)
+        meal.foods.remove(food)
+        message = f'Successfully removed {food.name} from {meal.name}'
+        return Response(message, status=status.HTTP_202_ACCEPTED)

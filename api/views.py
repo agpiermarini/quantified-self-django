@@ -5,10 +5,9 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import FoodSerializer
-from .models import Food
+from .serializers import FoodSerializer, MealSerializer
+from .models import Food, Meal
 
-# Create your views here.
 class FoodsView(viewsets.ViewSet):
 
     def index(self, request):
@@ -22,12 +21,13 @@ class FoodsView(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        queryset = Food.objects.create(name = request.data['name'], calories=request.data['calories'])
+        queryset = Food.objects.create(name = request.data['food']['name'], calories=request.data['food']['calories'])
+        print(queryset)
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
 
     def update(self, request, food_id):
-        Food.objects.filter(id=food_id).update(name = request.data['name'], calories=request.data['calories'])
+        Food.objects.filter(id=food_id).update(name = request.data['food']['name'], calories=request.data['food']['calories'])
         queryset = Food.objects.get(id=food_id)
         serializer = FoodSerializer(queryset, many=False)
         return Response(serializer.data)
@@ -35,3 +35,15 @@ class FoodsView(viewsets.ViewSet):
     def destroy(self, request, food_id):
         Food.objects.filter(id=food_id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class MealsView(viewsets.ViewSet):
+
+    def index(self, request):
+        queryset   = Meal.objects.all()
+        serializer = MealSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def show(self, request, meal_id=None):
+        queryset = Meal.objects.get(id=meal_id)
+        serializer = MealSerializer(queryset, many=False)
+        return Response(serializer.data)

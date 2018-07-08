@@ -1,1 +1,1 @@
-web: gunicorn quantifiedselfgjango.wsgi
+web: gunicorn quantifiedselfdjango.wsgi

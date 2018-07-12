@@ -61,7 +61,7 @@ Return all foods in the database
 
 Request URL
 ```
-/api/v1/foods
+/api/v1/foods/
 ```
 
 Response Body
@@ -97,7 +97,7 @@ Return food corresponding to :id
 
 Request URL
 ```
-/api/v1/foods/:id
+/api/v1/foods/<id>
 ```
 
 Response Body
@@ -120,7 +120,7 @@ Create a new food item in the database
 
 Request URL
 ```
-/api/v1/foods
+/api/v1/foods/
 ```
 
 Parameters Format
@@ -149,7 +149,7 @@ Edit food corresponding to :id
 
 Request URL
 ```
-/api/v1/foods/:id
+/api/v1/foods/<id>
 ```
 
 Parameters Format
@@ -178,7 +178,7 @@ Delete food corresponding to :id
 
 Request URL
 ```
-/api/v1/foods/:id
+/api/v1/foods/<id>
 ```
 
 Response Code
@@ -195,7 +195,7 @@ Return all meals along with their associated foods
 
 Request URL
 ```
-/api/v1/meals
+/api/v1/meals/
 ```
 
 Response Body
@@ -253,7 +253,7 @@ Return all foods associated with meal corresponding to :meal_id
 
 Request URL
 ```
-/api/v1/meals/:meal_id/foods
+/api/v1/meals/<meal_id>/foods/
 ```
 
 Response Body
@@ -292,7 +292,7 @@ Add food corresponding to :food_id to meal corresponding to :meal_id
 
 Request URL
 ```
-/api/v1/meals/:meal_id/foods/:food_id
+/api/v1/meals/<meal_id>/foods/<food_id>
 ```
 
 Response Body
@@ -312,7 +312,7 @@ Remove food corresponding to :food_id from meal corresponding to :meal_id
 
 Request URL
 ```
-/api/v1/meals/:meal_id/foods/:food_id
+/api/v1/meals/<meal_id>/foods/<food_id>
 ```
 
 Response Body

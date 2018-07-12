@@ -16,20 +16,20 @@ $ git clone https://github.com/agpiermarini/quantified-self-django
 From the application directory, run the following commands to install and update all gem dependencies:
 
 ```
-$ bundle
-$ bundle update
+$ pip install -r requirements.txt
 ```
 
 Next, run the following commands to initialize the database:
 
 ```
-$ rake db:{create,migrate}
+$ python3.7 manage.py makemigrations
+$ python3.7 manage.py migrate
 ```
 
 Then spin up a server:
 
 ```
-$ rails s
+$ python3.7 manage.py runserver 3000
 ```
 
 ___
@@ -37,10 +37,7 @@ ___
 
 Fork the [repository](https://github.com/agpiermarini/quantified-self-django) if you would like to contribute to this project. Pull requests will be considered in kind, but please note that contributions must adhere to a test-driven, rebase workflow.
 
-This project uses the RSpec test framework. Run tests using the standard `$ rspec` command.
-
-#### Database Schema
-![schema](public/schema.png)
+This project uses the RSpec test framework. Run tests using the standard `$ python3.7 manage.py test` command.
 
 
 #### Current Contributors
@@ -261,25 +258,25 @@ Request URL
 Response Body
 ```
   {
-      "id": 1,
-      "name": "Breakfast",
-      "foods": [
-          {
-              "id": 1,
-              "name": "Mango",
-              "calories": 150
-          },
-          {
-              "id": 6,
-              "name": "Yogurt",
-              "calories": 550
-          },
-          {
-              "id": 12,
-              "name": "Coffee",
-              "calories": 50
-          }
-      ]
+    "id": 1,
+    "name": "Breakfast",
+    "foods": [
+      {
+          "id": 1,
+          "name": "Mango",
+          "calories": 150
+      },
+      {
+          "id": 6,
+          "name": "Yogurt",
+          "calories": 550
+      },
+      {
+          "id": 12,
+          "name": "Coffee",
+          "calories": 50
+      }
+    ]
   }
 ```
 

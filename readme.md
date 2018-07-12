@@ -1,9 +1,9 @@
 # Quantified Self API (Django)
 This is a Python/Django API of which the ostensible purpose is to interface with the [Quantified Self Front End](https://agpiermarini.github.io/quantified-self-fe-django/) calorie tracking application.
 
-The Quantified Self API allows a user or application to post and consume data for foods and meals, and is currently hosted on Heroku at https://quantified-self-python-django.herokuapp.com/.  
+The Quantified Self API allows a user or application to post and consume data for foods and meals, and is currently deployed on Heroku at https://quantified-self-python-django.herokuapp.com/.  
 
- Local setup instructions and information regarding each of the available endpoints, are detailed below.
+Local setup instructions and information regarding each of the available endpoints, are detailed below.
 
 ___
 ### Setup
@@ -13,23 +13,23 @@ To run this application locally, first clone the repository from the following l
 $ git clone https://github.com/agpiermarini/quantified-self-django
 ```
 
-From the application directory, run the following commands to install and update all gem dependencies:
+From the application directory, run the following commands to install and update all dependencies:
 
 ```
-$ bundle
-$ bundle update
+$ pip install -r requirements.txt
 ```
 
 Next, run the following commands to initialize the database:
 
 ```
-$ rake db:{create,migrate}
+$ python3.7 manage.py makemigrations
+$ python3.7 manage.py migrate
 ```
 
-Then spin up a server:
+Then spin up a server on port 3000:
 
 ```
-$ rails s
+$ python3.7 manage.py runserver 3000
 ```
 
 ___
@@ -37,10 +37,7 @@ ___
 
 Fork the [repository](https://github.com/agpiermarini/quantified-self-django) if you would like to contribute to this project. Pull requests will be considered in kind, but please note that contributions must adhere to a test-driven, rebase workflow.
 
-This project uses the RSpec test framework. Run tests using the standard `$ rspec` command.
-
-#### Database Schema
-![schema](public/schema.png)
+This project uses Django's built-in test framework. Run tests using the standard `$ python3.7 manage.py test` command.
 
 
 #### Current Contributors
@@ -88,6 +85,7 @@ Response Body
   {...}
 ]
 ```
+
 Response Code
 ```
 200
@@ -261,25 +259,25 @@ Request URL
 Response Body
 ```
   {
-      "id": 1,
-      "name": "Breakfast",
-      "foods": [
-          {
-              "id": 1,
-              "name": "Mango",
-              "calories": 150
-          },
-          {
-              "id": 6,
-              "name": "Yogurt",
-              "calories": 550
-          },
-          {
-              "id": 12,
-              "name": "Coffee",
-              "calories": 50
-          }
-      ]
+    "id": 1,
+    "name": "Breakfast",
+    "foods": [
+      {
+          "id": 1,
+          "name": "Mango",
+          "calories": 150
+      },
+      {
+          "id": 6,
+          "name": "Yogurt",
+          "calories": 550
+      },
+      {
+          "id": 12,
+          "name": "Coffee",
+          "calories": 50
+      }
+    ]
   }
 ```
 
